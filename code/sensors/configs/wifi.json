@@ -1,0 +1,18 @@
+{
+    "scan": 1,
+    "verbose": 1,
+    "broadcast": {
+        "group": "224.1.1.1",
+        "port": 5007
+    }
+    "networks": [
+        {"ssid": "Pixel_7938",
+         "password": "yoloyoloyololo"},
+        {"ssid": "JamHouse Amaterasu 1",
+         "password": "jamjamjam"},
+        {"ssid": "JamHouse Amaterasu 2",
+         "password": "jamjamjam"},
+        {"ssid": "moss-wifi",
+         "password": "happy yellow"},
+    ]
+}

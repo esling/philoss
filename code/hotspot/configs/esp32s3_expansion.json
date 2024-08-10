@@ -1,0 +1,16 @@
+{
+    "board": "esp32s3",
+    "discovery": 1,
+    "wifi": 1,
+    "osc": {
+        "host": "127.0.0.1",
+        "out_port": 2323,
+        "in_port": 4242,
+        "bc_port": 7374
+    },
+    "screen": 1,
+    "buzzer": 1,
+    "sensors": [ 
+        {"id": 0, "type":"light"} 
+    ]
+}
