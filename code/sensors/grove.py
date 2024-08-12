@@ -8,10 +8,11 @@
                      <esling@ircam.fr>
 
 """
+import time
 import machine
 from gpio import GPIOInputContinuous, GPIOInputDiscrete, I2C
 from sensors.lis3dh import LIS3DH_I2C, RANGE_2_G, STANDARD_GRAVITY
-from machine import ADC
+from machine import ADC, Pin
 
 """
 ~~~~~
@@ -39,7 +40,7 @@ Piezo sensor
 ~~~~~
 """
 
-class GrovePiezo(GPIOInputDiscrete):
+class GrovePiezo(GPIOInputContinuous):
     
     def __init__(self,
             pin: int):
@@ -98,53 +99,48 @@ class GroveLIS3DHTRAccelerometer(I2C):
 Ultrasonic ranger
 ~~~~~
 """
-class GroveUltrasonicRanger(object):
+
+class GroveUltrasonic(GPIOInputDiscrete):
         
     _TIMEOUT1 = 1000
     _TIMEOUT2 = 10000
     
     def __init__(self, pin):
-        self.dio = machine.Pin(pin, machine.Pin.OUT)
+        super(GroveUltrasonic, self).__init__(pin = pin)
 
     def _get_distance(self):
-        self.dio.init(self.dio.OUT)
-        self.dio.value(0)
-        usleep(2)
-        self.dio.value(1)
-        usleep(10)
-        self.dio.value(0)
-
-        self.dio.init(self.dio.IN)
-
-        t0 = time.time()
+        self.pin.init(Pin.OUT)
+        self.pin.value(0)
+        time.sleep_us(2)
+        self.pin.value(1)
+        time.sleep_us(10)
+        self.pin.value(0)
+        self.pin.init(Pin.IN)
+        t0 = time.ticks_us()
         count = 0
-        while count < _TIMEOUT1:
-            if self.dio.value():
+        while count < self._TIMEOUT1:
+            if self.pin.value():
                 break
             count += 1
-        if count >= _TIMEOUT1:
+        if count >= self._TIMEOUT1:
             return None
-
-        t1 = time.time()
+        c1 = count
+        t1 = time.ticks_us()
         count = 0
-        while count < _TIMEOUT2:
-            if not self.dio.value():
+        while count < self._TIMEOUT2:
+            if not self.pin.value():
                 break
-            count += 1
-        if count >= _TIMEOUT2:
+            count += 1	
+        if count >= self._TIMEOUT2:
             return None
-
-        t2 = time.time()
-
-        dt = int((t1 - t0) * 1000000)
+        t2 = time.ticks_us()
+        dt = int(time.ticks_diff(t0, t1) * 1000000)
         if dt > 530:
             return None
-
-        distance = ((t2 - t1) * 1000000 / 29 / 2)    # cm
-
+        distance = (time.ticks_diff(t2, t1) / 29 / 2)    # cm
         return distance
 
-    def get_distance(self):
+    def read(self):
         while True:
             dist = self._get_distance()
             if dist:

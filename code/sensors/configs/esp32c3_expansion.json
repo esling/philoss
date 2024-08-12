@@ -11,6 +11,6 @@
     "screen": 1,
     "buzzer": 1,
     "sensors": [ 
-        {"id": 0, "type":"3-axis accelerometer"} 
+        {"id": 0, "type":"gyroscope", "pin":0} 
     ]
 }

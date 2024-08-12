@@ -87,7 +87,7 @@ class GPIOInputDiscrete(InputDiscrete):
         # Specific pull mode (Pin.PULL_UP)
         if (pull_mode is not None):
             self.pin = Pin(self.pin_id, Pin.IN, pull_mode)
-        self.pin.irq(lambda p:print(localtime()))
+        #self.pin.irq(lambda p:print(localtime()))
         
     def read(self):
         self.pin.value()
