@@ -82,7 +82,8 @@ class GroveLight(GPIOInputContinuous):
     
     def __init__(self,
             pin: int):
-        super(GroveLight, self).__init__(pin)
+        super(GroveLight, self).__init__(pin,
+            attn = ADC.ATTN_6DB)
         
 """
 ~~~~~
@@ -108,7 +109,7 @@ class GroveAccelerometer(I2C):
             pin_scl: int = 6,
             pin_sda: int = 7
         ):
-        super(GroveLIS3DHTRAccelerometer, self).__init__(pin_scl = pin_scl, pin_sda = pin_sda)
+        super(GroveAccelerometer, self).__init__(pin_scl = pin_scl, pin_sda = pin_sda)
         # Construct object
         self.imu = LIS3DH_I2C(self.i2c)
         # Set range of accelerometer (can be 2_G, 4_G, 8_G or 16_G).

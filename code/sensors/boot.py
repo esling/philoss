@@ -26,7 +26,7 @@ from led import LEDStrip
 # Safety reset
 gc.collect()
 # Global config values
-b_id = 1 					# Board ID (Important)
+b_id = 5 					# Board ID (Important)
 b_name = "[Phi board v0.3"	# Board identifier
 b_status = "Booting ..."	# Status print
 b_online = False			# Online (OSC) activate
@@ -119,18 +119,33 @@ while True:
         buffers[i].append(raw_val)
         # Apply sensor-specific preprocessing function
         proc_val = sensor_dict[cur_board["sensors"][i][0]][2](buffers[i])
-        final_val = sensor_normalize(proc_val, cur_board["sensors"][i][0])
-        # Thresholding value for accounting the value
-        if (final_val <= 0.):
-            continue
-        if (b_online):
-            # Send current value to OSC
-            osc.send_osc("/sensor/" + sensor_dict[cur_board["sensors"][i][0]][1], [b_id, i, final_val])
+        # Handle list values
+        if (cur_board["sensors"][i][0] == "gyroscope"):
+            for j, vA in enumerate(proc_val):
+                normA = sensor_normalize(vA + 2.0, cur_board["sensors"][i][0])
+                if (b_online):
+                    osc.send_osc("/sensor/" + sensor_dict[cur_board["sensors"][i][0]][1], [b_id, j, normA])
+                final_val = normA
+        else:
+            final_val = sensor_normalize(proc_val, cur_board["sensors"][i][0])
+            # Thresholding value for accounting the value
+            if (final_val <= 0.):
+                continue
+            if (b_online):
+                # Send current value to OSC
+                osc.send_osc("/sensor/" + sensor_dict[cur_board["sensors"][i][0]][1], [b_id, i, final_val])
         print(f'{str(sensors[i].__class__)[13:-2]:14s}: {final_val:3.3f}')
+        values[i] = final_val
     # Prepare output value
     screen.refresh(b_name, b_type, "Sending.", ip_in = ip, ip_out = ip_out, values = "%.2f"%(final_val))
+    # Update lights
     time.sleep_ms(refresh_ms)
-    #gc.collect()
+    # Garbage collect
+    gc.collect()
+    if (cur_board["light"]):
+        if (cur_board["light"]["mode"] == "continuous"):
+            strip.update_color(values[cur_board["light"]["color"]])
+            strip.update_intensity(values[cur_board["light"]["intensity"]] ** 4)
+    # Send the keep-alive message
     if (b_online):
-        # Send the keep-alive message
         alive_sock.sendto(str(b_id).encode(), alive_dest)

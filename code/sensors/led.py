@@ -22,6 +22,7 @@ class LEDStrip():
         # Configure the LED strip
         p = machine.Pin(pin)
         self.strip = neopixel.NeoPixel(p, n_leds)
+        self.cur_color = self.wheel(0)
         
     def set_color(self,
             index: int,
@@ -34,6 +35,21 @@ class LEDStrip():
     def clear(self):
         for i in range(self.n_leds):
             self.strip[i] = (0, 0, 0)
+        self.strip.write()
+        
+    def update_color(self,
+            value:float):
+        self.cur_color = self.wheel(int(value * 255))
+        
+    def update_intensity(self,
+            value: float):
+        tmp_color = list(self.cur_color)
+        for r in range(len(tmp_color)):
+            tmp_color[r] = int(tmp_color[r] * value)
+        tmp_color = tuple(tmp_color)
+        # Update the strip
+        for i in range(self.n_leds):
+            self.strip[i] = tmp_color
         self.strip.write()
 
     #

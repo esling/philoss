@@ -165,14 +165,14 @@ class OLEDSSD1306(Screen):
         statuses = [' ', 'x']
         str_boards = ''
         for b in boards:
-            str_boards += f'[{statuses[b]}]'
+            str_boards += f'{statuses[b]}|'
         live_status = statuses[(len(master) > 0)]
         self.clear()
         self.oled.text(name, self.content_x, 0, 1)
-        self.oled.text(f"|{live_status}| {master}", self.content_x, 10, 1)
-        self.oled.text(str_boards[:15], self.content_x, 20, 1)
-        self.oled.text(str_boards[15:30], self.content_x, 30, 1)
-        self.oled.text(str_boards[30:], self.content_x, 40, 1)
+        self.oled.text(f"[{live_status}] {master}", self.content_x, 10, 1)
+        self.oled.text('|' + str_boards[2:16], self.content_x, 20, 1)
+        self.oled.text('|' + str_boards[16:30], self.content_x, 30, 1)
+        self.oled.text('|' + str_boards[30:], self.content_x, 40, 1)
         self.oled.text("_________________", self.content_x, 45, 1)
         self.oled.text("" + status, self.content_x, 57, 1)
         self.content_y = 60

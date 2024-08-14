@@ -51,9 +51,9 @@ board = board_dict[config["board"]]()
 live_ip = ''
 live_lastseen = 0
 # Array of sensor boards that can connect
-boards_array = [0] * 15
-boards_ip = [''] * 15
-boards_lastseen = [0] * 15
+boards_array = [0] * 22
+boards_ip = [''] * 22
+boards_lastseen = [0] * 22
 # Create the screen
 screen = import_screen(config, board)
 screen.hotspot(b_name, 'Creating ...', live_ip, boards_array)

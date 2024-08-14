@@ -103,6 +103,8 @@ class ESP32C3(ESP32):
     A1:		int = 3
     A2:		int = 4
     A3:		int = 5
+    A4:		int = 6
+    A5:		int = 7
     D4:		int = 6
     D5:		int = 7
     D6:		int = 21

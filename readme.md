@@ -21,6 +21,19 @@ esptool.py --chip esp32c3 --port /dev/cu.usbmodem2101  write_flash -z 0 esp32c3-
 **Note that the port `/dev/cu.usbmodem2101` is for MacOS and may change**
 **Also note that the flash file and chip name should change depending on the board**
 
+How to find the right port if unfound
+
+```
+ls /dev/cu.usbmodem*
+ls /dev/*
+```
+
+Packages to install (through Tonny's package manager
+
+```
+datetime
+ssd1306
+```
 
 ## CircuitPython instructions
 
