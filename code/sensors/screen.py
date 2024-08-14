@@ -68,6 +68,10 @@ class Screen:
     def add_text(self, val: str):
         """ Add text at the end of the current content """
         pass
+    
+    def refresh(self, name: str, type: str, status: str, ip_in: str = "", ip_out: str = "", values: str = ""):
+        """ Refresh information screen """
+        pass
 
     
 class OLEDSSD1306(Screen):
@@ -188,8 +192,13 @@ def import_screen(
     if config["screen"] == 0:
         return Screen()
     if (isinstance(board, ESP32)):
-        screen = OLEDSSD1306(
-            pin_scl = board.SCL,
-            pin_sda = board.SDA)
+        try:
+            screen = OLEDSSD1306(
+                pin_scl = board.SCL,
+                pin_sda = board.SDA)
+        except Exception as error:
+            # Handle the exception
+            print("Screen error:", error)
+            return Screen()
     return screen
     

@@ -6,6 +6,8 @@
         "port": 5007
     }
     "networks": [
+        {"ssid": "[Philoss] Hotspot",
+         "password": "sancha4eva"},
         {"ssid": "Pixel_7938",
          "password": "yoloyoloyololo"},
         {"ssid": "JamHouse Amaterasu 1",

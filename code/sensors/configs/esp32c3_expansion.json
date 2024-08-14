@@ -4,7 +4,7 @@
     "wifi": 1,
     "osc": {
         "host": "127.0.0.1",
-        "out_port": 2324,
+        "out_port": 23241,
         "in_port": 4242,
         "bc_port": 7374
     },

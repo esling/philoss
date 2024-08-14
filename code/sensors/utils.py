@@ -15,29 +15,44 @@ from machine import Timer
 # Homemade ring buffer implementation
 #
 class RingBuffer:
+    
     def __init__(self, size_max):
         self.max = size_max
-        self.data = []
-    def append(self,x):
-        """append an element at the end of the buffer"""
-        self.data.append(x)
-        if len(self.data) == self.max:
-            self.cur=0
-            self.__class__ = RingBufferFull
-    def get(self):
-        """ return a list of elements from the oldest to the newest"""
-        return self.data
-
-
-class RingBufferFull:
-    def __init__(self,n):
-        raise "you should use RingBuffer"
-    def append(self,x):     
+        self.data = [0] * size_max
+        #self.weight = range(size_max)
+        self.cur = 0
+        
+    def append(self, x):
+        """ Append an element at the end of the buffer """
         self.data[self.cur]=x
         self.cur=(self.cur+1) % self.max
+        
     def get(self):
+        """ Return a list of elements from the oldest to the newest """
         return self.data[self.cur:]+self.data[:self.cur]
+    
+    def len(self):
+        """ Length of the list """
+        return self.max
 
+#
+# Set of pre-processing functions
+#
+def preprocess_last(buffer: RingBuffer):
+    """ Just return last element """
+    return buffer.get()[-1]
+
+def preprocess_mean(buffer: RingBuffer):
+    """ Mean of buffer """
+    return sum(buffer.get()) / buffer.len()
+
+def preprocess_weight(buffer: RingBuffer):
+    """ Sum of buffer """
+    return sum(range(buffer.len()) * buffer.get()) / sum(range(buffer.len()))
+
+#
+# Musical utility functions
+#
 def freq2midi(
         freq: float
     ):

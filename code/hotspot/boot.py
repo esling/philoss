@@ -91,7 +91,7 @@ while True:
     if (cur_time - live_lastseen > alive_timeout):
         live_ip = ''
     for b in range(len(boards_array)):
-        if (cur_time - live_lastseen > alive_timeout):
+        if (cur_time - boards_lastseen[b] > alive_timeout):
             boards_array[b] = 0
             boards_ip[b] = ''
     # Update screen
@@ -100,7 +100,7 @@ while True:
         continue
     message, client = sock.recvfrom(2048)
     # Process message
-    message = message.decode('utf-8')[:4]
+    message = message.split(b'\x00')[0].decode('utf-8')
     client = client[0]
     print(f'Got message {message} from {client}')
     # Update corresponding status

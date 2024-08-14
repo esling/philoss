@@ -36,6 +36,25 @@ class GroveRotary(GPIOInputContinuous):
 
 """
 ~~~~~
+Disc sensor
+~~~~~
+"""
+
+class GroveDisc(GPIOInputContinuous):
+    
+    def __init__(self,
+            pin: int):
+        super(GrovePiezo, self).__init__(pin = pin,
+            attn = ADC.ATTN_0DB)
+        
+    def read(self,
+        mode: str = "uv"):
+        # read an analog value in microvolts
+        val = self.adc.read_uv()
+        return int(val / 1000)
+
+"""
+~~~~~
 Piezo sensor
 ~~~~~
 """
@@ -44,7 +63,14 @@ class GrovePiezo(GPIOInputContinuous):
     
     def __init__(self,
             pin: int):
-        super(GrovePiezo, self).__init__(pin)
+        super(GrovePiezo, self).__init__(pin = pin,
+            attn = ADC.ATTN_11DB)
+        
+    def read(self,
+        mode: str = "uv"):
+        # read an analog value in microvolts
+        val = self.adc.read_uv()
+        return int(val / 10000)
 
 """
 ~~~~~
@@ -76,7 +102,7 @@ class GroveTouch(GPIOInputContinuous):
 ~~~~~
 """
 
-class GroveLIS3DHTRAccelerometer(I2C):
+class GroveAccelerometer(I2C):
      
     def __init__ (self,
             pin_scl: int = 6,
@@ -109,6 +135,7 @@ class GroveUltrasonic(GPIOInputDiscrete):
         super(GroveUltrasonic, self).__init__(pin = pin)
 
     def _get_distance(self):
+        #print("yo")
         self.pin.init(Pin.OUT)
         self.pin.value(0)
         time.sleep_us(2)
@@ -125,19 +152,23 @@ class GroveUltrasonic(GPIOInputDiscrete):
         if count >= self._TIMEOUT1:
             return None
         c1 = count
+        #print(c1)
         t1 = time.ticks_us()
         count = 0
         while count < self._TIMEOUT2:
             if not self.pin.value():
                 break
-            count += 1	
+            count += 1
+        #print(count)
         if count >= self._TIMEOUT2:
             return None
         t2 = time.ticks_us()
         dt = int(time.ticks_diff(t0, t1) * 1000000)
+        #print(dt)
         if dt > 530:
             return None
         distance = (time.ticks_diff(t2, t1) / 29 / 2)    # cm
+        #print(distance)
         return distance
 
     def read(self):
